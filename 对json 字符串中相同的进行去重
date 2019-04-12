@@ -1,0 +1,55 @@
+  class Program
+    {
+        static void Main(string[] args)
+        {
+
+
+            //string jsonArrayText =  "[{\"name\": \"张三\",\"serial\": \"0001\"}, {\"name\": \"李四\",\"serial\": \"0002\"}, {\"name\": \"王五\",\"serial\": \"0003\"}, {\"name\": \"王五2\",\"serial\": \"0003\"}, {\"name\": \"赵四\",\"serial\": \"0004\"}, {\"name\": \"小明\",\"serial\": \"005\"}, {\"name\": \"小张\",\"serial\": \"006\"}, {\"name\": \"小李\",\"serial\": \"006\"}, {\"name\": \"小李2\",\"serial\": \"006\"}, {\"name\": \"赵四2\",\"serial\": \"0004\"}]";
+             //上面写法和下面一样
+            string jsonArrayText = "[{'name': '张三','serial': '0001'}, {'name': '李四','serial': '0002'}, {'name': '王五','serial': '0003'}, {'name': '王五2','serial': '0003'}, {'name': '赵四','serial': '0004'}, {'name': '小明','serial': '005'}, {'name':'小张','serial': '006'}, {'name': '小李','serial': '006'}, {'name': '小李2','serial': '006'}, {'name': '赵四2','serial': '0004'}]";
+            JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
+            List<ActionParam> listDetail = js.Deserialize<List<ActionParam>>(jsonArrayText);
+          
+            //去重复
+            //List<ActionParam> updatelicateList1 = listDetail.Distinct().ToList();//通过User类的Equals实现去重  
+            //1:Lambda表达式去重
+            List<ActionParam> updatelicateList2 = listDetail.Where((x, i) => listDetail.FindIndex(z => z.serial == x.serial) == i).ToList();
+            //2://通过循环方式去重
+            List<ActionParam> updatelicateList3 = new List<ActionParam>();  
+            foreach (ActionParam user in listDetail)
+            {
+                if (updatelicateList3.Exists(x => x.serial == user.serial) == false)
+                {
+                    updatelicateList3.Add(user);
+                }
+            }
+            //打印Lambda表达式去重结果
+            foreach (var tesmp1 in updatelicateList2)
+            {
+                Console.WriteLine(tesmp1);
+            };
+            //打印通过循环方式去重结果
+            foreach (var tesmp2 in updatelicateList3)
+            {
+                Console.WriteLine(tesmp2);
+            };
+
+
+            Console.ReadKey();
+            
+        }
+       
+
+    }
+
+    public class ActionParam
+    {
+        //{\"name\": \"张三\",\"serial\": \"0001\"}
+        public string name { get; set; }
+        public string serial { get; set; }
+        public override string ToString()
+        {
+            return string.Format("name={0},serial={1}", name, serial);
+        }
+      
+    }
