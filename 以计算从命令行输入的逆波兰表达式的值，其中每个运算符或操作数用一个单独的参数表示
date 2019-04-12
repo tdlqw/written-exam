@@ -1,0 +1,91 @@
+ class Program
+    {
+        static void Main(string[] args)
+        {
+
+            //numStack为逆波兰表达式
+            string numStack = "563+×3÷1-";
+            Stack<string> rpnFormula = new Stack<string>();
+            string arr = "";
+            string[] array = new string[numStack.Length];
+            for (int i = 0; i < numStack.Length;i++ ) {
+                array[i] = numStack.Substring(i, 1);
+                arr += array[i] + ",";
+            }
+            //foreach (string s in arr)
+            //{
+            //    rpnFormula.Push(s);
+            //}
+            for (int y = 0; y < arr.Length;y++ )
+            {
+                if(arr[y].ToString()!=","){
+                    string valu = arr[y].ToString();
+                    rpnFormula.Push(valu);
+                }
+               
+            }
+            Console.WriteLine(CalcRPNFormula(rpnFormula));
+        }
+        private static string CalcRPNFormula(Stack<string> rpnFormula)
+        {
+            Stack<string> resultStack = new Stack<string>();
+            foreach (string s in rpnFormula)
+            {
+                int num = GetOperationLevel(s);
+                if (num == 0)
+                {
+                    resultStack.Push(s);
+                }
+                else
+                {
+                    CalcResult(resultStack, s);
+                }
+            }
+            return resultStack.Pop();
+        }
+
+        private static void CalcResult(Stack<string> resultStack, string operatorStr)
+        {
+            if (resultStack.Count >= 2)
+            {
+                double num2 = Convert.ToDouble(resultStack.Pop());
+                double num1 = Convert.ToDouble(resultStack.Pop());
+                if (operatorStr == "+")
+                {
+                    resultStack.Push(Convert.ToString(num1 + num2));
+                }
+                else if (operatorStr == "-")
+                {
+                    resultStack.Push(Convert.ToString(num1 - num2));
+                }
+                else if (operatorStr == "*")
+                {
+                    resultStack.Push(Convert.ToString(num1 * num2));
+                }
+                else if (operatorStr == "/")
+                {
+                    resultStack.Push(Convert.ToString(num1 / num2));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取运算符等级
+        /// </summary>
+        /// <param name="X">当前字符</param>
+        /// <returns></returns>
+        private static int GetOperationLevel(string X)
+        {
+            switch (X)
+            {
+                case "+": return 1;
+                case "-": return 1;
+                case "*": return 2;
+                case "/": return 2;
+                case "#": return -1;
+                case "(": return -1;
+                case ")": return -1;
+                default: return 0;
+            }
+        }
+    }
