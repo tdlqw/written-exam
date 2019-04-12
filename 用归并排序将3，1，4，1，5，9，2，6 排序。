@@ -1,0 +1,57 @@
+ class Program
+    {
+       
+        static void Main(string[] args)
+        {
+             int[] arr = { 3, 1, 4, 1, 5, 9, 2, 6 };
+            int b = arr.Length - 1, a = 0;
+            int[] temp = new int[arr.Length];//临时数组，长度和arr相同
+            GuiBing(arr, a, b, temp);
+            for (int q = 0; q < arr.Length; q++)
+            {
+                Console.Write(arr[q] + "  ");
+            }
+            Console.ReadKey();
+        }
+      
+        //由整化零，将数组分成左右两部分，用于排序
+        public static void GuiBing(int[] arry, int first, int last, int[] temp)
+        {
+            if (first < last)
+            {
+                int mid = (first + last) / 2;
+                GuiBing(arry, first, mid, temp);
+                GuiBing(arry, mid + 1, last, temp);
+                Sort(arry, first, mid, last, temp);
+            }
+        }
+        //合并数组，将数组的两部分，按顺序放入临时数组里面，当排序完成后再将临时数组的元素放回数组
+        //多出了辅助空间
+        public static void Sort(int[] a, int first, int mid, int last, int[] temp)
+        {
+            int i = first, j = mid + 1;
+            int m = mid, n = last;
+            int k = 0;
+ 
+            //选出两部分中较小的数添加到临时数组
+            while (i <= m && j <= n)
+            {
+                if (a[i] <= a[j])
+                    temp[k++] = a[i++];
+                else
+                    temp[k++] = a[j++];
+            }
+ 
+            //当一部分添加完成之后，另一部分按顺序进入数组
+            while (i <= m)
+                temp[k++] = a[i++];
+ 
+            while (j <= n)
+                temp[k++] = a[j++];
+ 
+            for (i = 0; i < k; i++)
+                a[first + i] = temp[i];
+        }
+
+    
+    }
