@@ -1,0 +1,21 @@
+class Program
+    {
+
+        static void Main(string[] args)
+        {
+            string strtext = "abc";
+            string strResult = DaoZhiString(strtext);
+            Console.WriteLine("字符串反转前为:" + " " + strtext);
+            Console.WriteLine("字符串反转后为:" + " " + strResult);
+            Console.ReadKey();
+        }
+        static string DaoZhiString(string strTest)
+        {
+            if (strTest.Length == 1)
+                return strTest;
+            string strResult = strTest.Substring(strTest.Length - 1, 1);
+            strResult += DaoZhiString(strTest.Substring(0, strTest.Length - 1));
+            return strResult;
+        }
+   
+    }
