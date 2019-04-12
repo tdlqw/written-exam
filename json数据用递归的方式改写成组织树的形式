@@ -1,0 +1,86 @@
+class Program
+    {
+        
+        static void Main(string[] args)
+        {
+           
+
+            //最终结果
+            ActionParamend ur = new ActionParamend();
+            //调用
+            Create(ur,"110");
+            //打印
+            Print(ur);
+            string str = JsonConvert.SerializeObject(ur);
+            Console.ReadLine();
+            Console.ReadKey();
+
+
+        }
+      static  string jsonArrayTextcity = "[{\"id\": \"1\",\"name\": \"中国\",\"code\": \"110\",\"parent\": \"\"},{\"id\": \"2\",\"name\": \"北京市\",\"code\": \"110000\",\"parent\": \"110\"},{\"id\": \"3\",\"name\": \"河北省\",\"code\": \"130000\",\"parent\": \"110\"},{\"id\": \"4\",\"name\": \"四川省\",\"code\": \"510000\",\"parent\": \"110\"},{\"id\": \"5\",\"name\": \"石家庄市\",\"code\": \"130001\",\"parent\": \"130000\"},{\"id\": \"6\",\"name\": \"唐山市\",\"code\": \"130002\",\"parent\": \"130000\"},{\"id\": \"7\",\"name\": \"邢台市\",\"code\": \"130003\",\"parent\": \"130000\"},{\"id\": \"8\",\"name\": \"成都市\",\"code\": \"510001\",\"parent\": \"510000\"},{\"id\": \"9\",\"name\": \"简阳市\",\"code\": \"510002\",\"parent\": \"510000\"},{\"id\": \"10\",\"name\": \"武侯区\",\"code\": \"51000101\",\"parent\": \"510001\"},{\"id\": \"11\",\"name\": \"金牛区\",\"code\": \"51000102\",\"parent\": \"510001\"}]";
+      static JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
+      static List<ActionParam> listDetailcity = js.Deserialize<List<ActionParam>>(jsonArrayTextcity);
+        //递归遍历
+      private static void Create(ActionParamend node, string code)
+        {
+            var q = listDetailcity.Where(x => x.parent == code).ToList();
+            for (int i = 0; i < q.Count; i++)
+            {
+                ActionParamend nd = new ActionParamend();
+                nd.id = q[i].id;
+                nd.name = q[i].name;
+                nd.code = q[i].code;
+                Create(nd, q[i].code);
+                node.City.Add(nd);
+            }
+
+        }
+
+        //打印查看结果
+     static void Print(ActionParamend ur)
+        {
+            Console.WriteLine("id:"+ur.id);
+            Console.WriteLine("name:"+ur.name);
+            Console.WriteLine("code:"+ur.code);
+            if (ur.City != null)
+                foreach (var item in ur.City)
+                {
+                    Print(item);
+                }
+        }
+
+
+    }
+    //遍历前的数据
+    public class ActionParam
+    {
+        //{\"id\": \"1\",\"name\": \"中国\",\"code\": \"110\",\"parent\": \"\"}
+        public int id { get; set; }
+        public string name { get; set; }
+        public string code { get; set; }
+
+        public string parent { get; set; }
+        public override string ToString()
+        {
+            return string.Format("id={0},name={1},code={2},parent={3}", id, name, code, parent);
+        }
+
+    }
+
+    //遍历后的数据
+    public class ActionParamend
+    {
+        //{\"id\": \"1\",\"name\": \"中国\",\"code\": \"110\",\"parent\": \"\"}
+        public int id { get; set; }
+        public string name { get; set; }
+        public string code { get; set; }
+
+        public string parent { get; set; }
+
+        public List<ActionParamend> City = new List<ActionParamend>();
+        public override string ToString()
+        {
+            return string.Format("id={0},name={1},code={2},parent={3}", id, name, code, parent);
+        }
+
+    }
